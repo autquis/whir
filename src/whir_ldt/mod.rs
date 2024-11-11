@@ -32,7 +32,7 @@ mod tests {
 
     use crate::crypto::fields::Field64;
     use crate::crypto::merkle_tree::blake3 as merkle_tree;
-    use crate::parameters::{FoldType, MultivariateParameters, SoundnessType, ProtocolParameters};
+    use crate::parameters::{FoldType, MultivariateParameters, ProtocolParameters, SoundnessType};
     use crate::poly_utils::coeffs::CoefficientList;
     use crate::whir_ldt::{
         committer::Committer, iopattern::WhirIOPattern, parameters::WhirConfig, prover::Prover,

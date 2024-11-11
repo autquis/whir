@@ -7,7 +7,7 @@ use ark_ff::FftField;
 use crate::{
     crypto::fields::FieldWithSize,
     domain::Domain,
-    parameters::{FoldType, MultivariateParameters, SoundnessType, ProtocolParameters},
+    parameters::{FoldType, MultivariateParameters, ProtocolParameters, SoundnessType},
 };
 
 #[derive(Clone)]

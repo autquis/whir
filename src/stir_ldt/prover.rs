@@ -1,5 +1,3 @@
-use std::iter;
-
 use super::{committer::Witness, parameters::StirConfig, StirProof};
 use crate::{
     domain::Domain,
@@ -146,7 +144,7 @@ where
 
         // Fold the coefficients, and compute fft of polynomial (and commit)
         // TODO: This actually should be shifted!!!
-        let new_domain = round_state.domain.scale(2);
+        let new_domain = round_state.domain.scale_with_offset(2);
         let expansion = new_domain.size() / (folded_coefficients.degree() + 1);
         let evals = expand_from_coeff(folded_coefficients.coeffs(), expansion);
         // TODO: `stack_evaluations` and `restructure_evaluations` are really in-place algorithms.
@@ -193,14 +191,17 @@ where
         let mut stir_queries_seed = [0u8; 32];
         merlin.fill_challenge_bytes(&mut stir_queries_seed)?;
         let mut stir_gen = rand_chacha::ChaCha20Rng::from_seed(stir_queries_seed);
+        // Obtain t random integers between 0 and size of the folded domain.
         let stir_challenges_indexes =
             utils::dedup((0..round_params.num_queries).map(|_| {
                 stir_gen.gen_range(0..round_state.domain.folded_size(self.0.folding_factor))
             }));
+        // Obtain the generator of the folded domain.
         let domain_scaled_gen = round_state
             .domain
             .backing_domain
             .element(1 << self.0.folding_factor);
+        // This is \mathcal{G}_i from the paper.
         let stir_challenges: Vec<_> = ood_points
             .into_iter()
             .chain(
